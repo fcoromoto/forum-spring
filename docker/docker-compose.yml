@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  forum-spring-api:
+    container_name: forum-spring-api
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8000:8000"
+    environment:
+      POSTGRES_URL: jdbc:postgresql://forum-db:5432/forum
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    depends_on: 
+      forum-spring-db:
+        condition: service_healthy
+    entrypoint: ["java","-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000", "-jar", "app.jar"]
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/health | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+  
+  forum-spring-db:
+    image: postgres:14-alpine
+    container_name: forum-spring-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: forum-spring
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      -  forum-spring-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "db_prod" ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+    
+volumes: 
+  forum-spring-db-data:
