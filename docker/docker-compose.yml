@@ -10,7 +10,7 @@ services:
       - "8080:8080"
       - "8000:8000"
     environment:
-      POSTGRES_URL: jdbc:postgresql://forum-db:5432/forum
+      POSTGRES_URL: jdbc:postgresql://forum-spring-db:5432/forum
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     depends_on: 
@@ -31,7 +31,7 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_DB: forum-spring
+      POSTGRES_DB: forum
       POSTGRES_PASSWORD: postgres
     volumes:
       -  forum-spring-db-data:/var/lib/postgresql/data
