@@ -1,0 +1,12 @@
+### Consulta
+GET http://localhost:8080/topicos?pagina=0&quantidade=10
+
+### Cadastro
+POST http://localhost:8080/topicos
+Content-Type: application/json
+
+{
+  "titulo": "Dúvida",
+  "mensagem": "Erro ao criar projeto",
+  "nomeCurso": "Spring Boot"
+  }
